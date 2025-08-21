@@ -9,6 +9,7 @@ namespace TheraJournal.Core.Enums
     public enum UserRole
     {
         Patient,
-        Therapist
+        Therapist,
+        Admin
     }
 }
