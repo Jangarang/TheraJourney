@@ -8,5 +8,6 @@ namespace TheraJournal.Core.DTO
 {
     public class RegisterDTO
     {
+        public string? UserName { get; set; }
     }
 }

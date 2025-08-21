@@ -10,7 +10,6 @@
     <Folder Include="Domain\RepositoryContracts\" />
     <Folder Include="Identity\" />
     <Folder Include="Services\" />
-    <Folder Include="ServiceContracts\" />
   </ItemGroup>
 
   <ItemGroup>

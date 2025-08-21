@@ -27,7 +27,6 @@
     <Folder Include="ClientApp\src\hooks\" />
     <Folder Include="ClientApp\src\utils\" />
     <Folder Include="ClientApp\src\types\" />
-    <Folder Include="ClientApp\src\pages\" />
   </ItemGroup>
 
   <ItemGroup>
