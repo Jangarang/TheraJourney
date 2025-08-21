@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheraJournal.WebAPI", "TheraJournal\TheraJournal.WebAPI.csproj", "{179683D4-1EE4-46D1-AC7B-A250F2B488C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheraJournal.Core", "TheraJournal.Core\TheraJournal.Core.csproj", "{6A06CB4E-FE53-48C2-A479-A5356F3D210F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheraJournal.Infrastructure", "TheraJournal.Infrastructure\TheraJournal.Infrastructure.csproj", "{DA4B5F16-84E0-474F-83EE-E3915B61851F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{179683D4-1EE4-46D1-AC7B-A250F2B488C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{179683D4-1EE4-46D1-AC7B-A250F2B488C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{179683D4-1EE4-46D1-AC7B-A250F2B488C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{179683D4-1EE4-46D1-AC7B-A250F2B488C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A06CB4E-FE53-48C2-A479-A5356F3D210F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A06CB4E-FE53-48C2-A479-A5356F3D210F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A06CB4E-FE53-48C2-A479-A5356F3D210F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A06CB4E-FE53-48C2-A479-A5356F3D210F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA4B5F16-84E0-474F-83EE-E3915B61851F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA4B5F16-84E0-474F-83EE-E3915B61851F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA4B5F16-84E0-474F-83EE-E3915B61851F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA4B5F16-84E0-474F-83EE-E3915B61851F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01436C21-0A1C-4DE2-944B-BED2F7172216}
+	EndGlobalSection
+EndGlobal

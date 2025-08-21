@@ -1,0 +1,6 @@
+@TheraJournal_HostAddress = http://localhost:5207
+
+GET {{TheraJournal_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
