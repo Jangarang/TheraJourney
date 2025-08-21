@@ -15,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
+// Read from env
+builder.Configuration.AddEnvironmentVariables();
+
 //Identity
 
 
