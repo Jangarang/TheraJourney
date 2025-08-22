@@ -10,7 +10,7 @@ namespace TheraJournal.Core.Domain.Entities
     public class Patient
     {
         public Guid Id { get; set; }
-        public Guid ApplicationUserId { get; set; }
+        public Guid ApplicationUserId { get; set; } //Why another id here?
         public ApplicationUser ApplicationUser { get; set; } = null!; // Why is this here?
         public string? PatientName { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;

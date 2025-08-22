@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using TheraJournal.Core.Domain.Entities;
 using TheraJournal.Core.Domain.IdentityEntities;
+using TheraJournal.Core.Domain.RepositoryContracts;
 using TheraJournal.Core.DTO;
 using TheraJournal.Core.ServiceContracts;
 
@@ -14,16 +16,23 @@ namespace TheraJournal.Core.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IPatientRepository _patientRepository;
+        private readonly ITherapistRepository _therapistRepository;
         private readonly IAuthService _authService;
         private readonly IJwtService _jwtService;
 
         public AuthService(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<ApplicationRole> roleManager,
+            IPatientRepository patientRepository,
             IAuthService authService,
             IJwtService jwtService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+            _patientRepository = patientRepository;
             _authService = authService;
             _jwtService = jwtService;
         }
@@ -55,15 +64,62 @@ namespace TheraJournal.Core.Services
             return null;
         }
 
-        public Task<AuthenticationResponseDTO?> RegisterAsync(RegisterDTO registerDTO)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="registerDTO"></param>
+        /// <returns></returns>
+
+        public async Task<AuthenticationResponseDTO?>? RegisterPatientAsync(RegisterPatientDTO registerDTO)
+        {
+            var user = new ApplicationUser
+            {
+                Email = registerDTO.Email,
+                PhoneNumber = registerDTO.PhoneNumber,
+                UserName = registerDTO.Email,
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, registerDTO.Password);
+
+            if (!result.Succeeded)
+            {
+                return null;
+            }
+
+            //if (registerDTO.Role == Enums.UserRole.Patient)
+            //{
+                await _patientRepository.AddAsync(new Patient
+                {
+                    ApplicationUserId = user.Id,
+                    PatientName = registerDTO.PersonName,
+                    Email = registerDTO.Email,
+                    PhoneNumber = registerDTO.PhoneNumber,
+                    Gender = registerDTO.Gender,
+                    Address = registerDTO.Address,
+                    DateOfBirth = registerDTO.DateOfBirth,
+
+                });
+
+                await _userManager.AddToRoleAsync(user, ApplicationRole.Patient.ToString());
+                await _signInManager.SignInAsync(user, isPersistent: false);
+
+                var authenticationResponse = _jwtService.CreateJwtToken(user);
+                //user.RefreshToken = authenticationResponse.RefreshToken;
+                //user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
+                await _userManager.UpdateAsync(user);
+
+                return authenticationResponse;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="registerDTO"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Task<AuthenticationResponseDTO?>? RegisterTherapistAsync(RegisterTherapistDTO registerDTO)
         {
             throw new NotImplementedException();
-            //ApplicationUser user = new ApplicationUser
-            //{
-            //    Email = registerDTO.Email,
-            //    PhoneNumber = registerDTO.PhoneNumber,
-            //    UserName = registerDTO.Email,
-            //};
         }
     }
 }

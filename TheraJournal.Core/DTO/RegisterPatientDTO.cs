@@ -5,10 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TheraJournal.Core.Enums;
 
 namespace TheraJournal.Core.DTO
 {
-    public class RegisterDTO
+    /// <summary>
+    /// DTO class for registering a new patient.
+    /// </summary>
+    public class RegisterPatientDTO
     {
         public string UserName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Person Name can't be blank")]
@@ -26,6 +30,9 @@ namespace TheraJournal.Core.DTO
         [Remote(action: "IsEmailAlreadyRegister", controller: "Account", ErrorMessage = "Email is already is use")]
         public string PhoneNumber { get; set; } = string.Empty;
 
+        public string Gender { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty; 
+        public DateTime DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Password can't be blank")]
         public string Password { get; set; } = string.Empty;
@@ -34,5 +41,7 @@ namespace TheraJournal.Core.DTO
         [Required(ErrorMessage = "Confirm Password can't be blank")]
         [Compare("Password", ErrorMessage = "Password and confirm password do not match")]
         public string ConfirmPassword { get; set; } = string.Empty;
+
+        //public UserRole Role { get; set; } //enum: Patient, Therapist, Admin
     }
 }
