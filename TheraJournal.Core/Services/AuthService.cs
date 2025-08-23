@@ -17,6 +17,9 @@ namespace TheraJournal.Core.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+
+        private readonly IRefreshTokenStore _refreshTokenRepo;
+
         private readonly IPatientRepository _patientRepository;
         private readonly ITherapistRepository _therapistRepository;
         private readonly IAuthService _authService;
@@ -49,13 +52,21 @@ namespace TheraJournal.Core.Services
             if (result.IsCompletedSuccessfully)
             {
                 ApplicationUser? user = await _userManager.FindByEmailAsync(loginDTO.Email);
+                
 
                 if (user == null) {
                     return null;
                 }
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
+
+                // Create Tokens
                 var authenticationResponse = _jwtService.CreateJwtToken(user);
+
+                RefreshToken refreshToken = new RefreshToken (
+                     
+                );
+
                 await _userManager.UpdateAsync(user);
 
                 return authenticationResponse;
@@ -63,12 +74,6 @@ namespace TheraJournal.Core.Services
 
             return null;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="registerDTO"></param>
-        /// <returns></returns>
 
         public async Task<AuthenticationResponseDTO?>? RegisterPatientAsync(RegisterPatientDTO registerDTO)
         {
@@ -88,35 +93,30 @@ namespace TheraJournal.Core.Services
 
             //if (registerDTO.Role == Enums.UserRole.Patient)
             //{
-                await _patientRepository.AddAsync(new Patient
-                {
-                    ApplicationUserId = user.Id,
-                    PatientName = registerDTO.PersonName,
-                    Email = registerDTO.Email,
-                    PhoneNumber = registerDTO.PhoneNumber,
-                    Gender = registerDTO.Gender,
-                    Address = registerDTO.Address,
-                    DateOfBirth = registerDTO.DateOfBirth,
+            await _patientRepository.AddAsync(new Patient
+            {
+                ApplicationUserId = user.Id,
+                PatientName = registerDTO.PersonName,
+                Email = registerDTO.Email,
+                PhoneNumber = registerDTO.PhoneNumber,
+                Gender = registerDTO.Gender,
+                Address = registerDTO.Address,
+                DateOfBirth = registerDTO.DateOfBirth,
+            });
 
-                });
+            await _userManager.AddToRoleAsync(user, ApplicationRole.Patient.ToString());
+            await _signInManager.SignInAsync(user, isPersistent: false);
 
-                await _userManager.AddToRoleAsync(user, ApplicationRole.Patient.ToString());
-                await _signInManager.SignInAsync(user, isPersistent: false);
+            var authenticationResponse = _jwtService.CreateJwtToken(user); // create jwttoken
+                       
+            //user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
+             
+            
+            await _userManager.UpdateAsync(user);
 
-                var authenticationResponse = _jwtService.CreateJwtToken(user);
-                //user.RefreshToken = authenticationResponse.RefreshToken;
-                //user.RefreshTokenExpirationDateTime = authenticationResponse.RefreshTokenExpirationDateTime;
-                await _userManager.UpdateAsync(user);
-
-                return authenticationResponse;
+            return authenticationResponse;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="registerDTO"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public Task<AuthenticationResponseDTO?>? RegisterTherapistAsync(RegisterTherapistDTO registerDTO)
         {
             throw new NotImplementedException();

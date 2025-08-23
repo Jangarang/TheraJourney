@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TheraJournal.Core.DTO
 {
-    public class TokenModelDTO
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TokenDTO
     {
+        public string? Token { get; set; } = string.Empty;
     }
 }

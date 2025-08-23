@@ -10,6 +10,8 @@ namespace TheraJournal.Infrastructure.DbContext
         //Dbset
         public virtual DbSet<Therapist> Therapists { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
+
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
         
         public virtual DbSet<TherapistApplication> TherapistApplications { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)

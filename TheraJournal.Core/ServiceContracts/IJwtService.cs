@@ -8,5 +8,6 @@ namespace TheraJournal.Core.ServiceContracts
     {
         AuthenticationResponseDTO CreateJwtToken(ApplicationUser user);
         ClaimsPrincipal GetPrincipalFromJwtToken(string? token);
+        Task<string> CreateRefreshToken();
     }
 }

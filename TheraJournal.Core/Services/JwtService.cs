@@ -12,14 +12,21 @@ using TheraJournal.Core.DTO;
 using TheraJournal.Core.ServiceContracts;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
+using TheraJournal.Core.Domain.Entities;
+using TheraJournal.Core.Domain.RepositoryContracts;
 
 namespace TheraJournal.Core.Services
 {
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-        public JwtService(IConfiguration configuration) { 
+        private readonly IRefreshTokenStore _refreshTokenRepo;
+
+        public JwtService(IConfiguration configuration,
+            IRefreshTokenStore refreshTokenRepo) 
+        { 
             _configuration = configuration;
+            _refreshTokenRepo = refreshTokenRepo;
         }
 
         /// <summary>
@@ -53,11 +60,11 @@ namespace TheraJournal.Core.Services
 
             // Create a JwtSecurityToken object with the given issuer, audience, claims, expiration, and signing credentials.
             JwtSecurityToken tokenGenerator = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: expiration,
-            signingCredentials: signingCredentials
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: expiration,
+                signingCredentials: signingCredentials
             );
 
             // Create a JwtSecurityTokenHandler object and use it to write the token as a string.
@@ -75,12 +82,26 @@ namespace TheraJournal.Core.Services
         }
         
         //Creates a refresh token (base 64 string of random numbers)
-        private string GenerateRefreshToken()
+        public async Task<string> CreateRefreshToken()
         {
             Byte[] bytes = new byte[64];
+                
             RandomNumberGenerator.Create();
             var randomNumberGenerator = RandomNumberGenerator.Create();
             randomNumberGenerator.GetBytes(bytes);
+            
+            RefreshToken rt = new RefreshToken()
+            {
+                Token = Convert.ToBase64String(bytes),
+                JwtId = Guid.NewGuid().ToString(),
+                CreateAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(60),
+                isUsed = false,
+                isRevoked = false
+            };
+
+            await _refreshTokenRepo.AddAsync(rt);
+
             return Convert.ToBase64String(bytes);
         }
 
