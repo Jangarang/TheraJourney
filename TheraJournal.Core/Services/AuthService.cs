@@ -22,6 +22,7 @@ namespace TheraJournal.Core.Services
 
         private readonly IPatientRepository _patientRepository;
         private readonly ITherapistRepository _therapistRepository;
+
         private readonly IAuthService _authService;
         private readonly IJwtService _jwtService;
 
@@ -62,10 +63,6 @@ namespace TheraJournal.Core.Services
 
                 // Create Tokens
                 var authenticationResponse = _jwtService.CreateJwtToken(user);
-
-                RefreshToken refreshToken = new RefreshToken (
-                     
-                );
 
                 await _userManager.UpdateAsync(user);
 
