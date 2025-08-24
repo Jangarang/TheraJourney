@@ -16,6 +16,7 @@ namespace TheraJournal.Core.DTO
         public string PersonName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
+        public string? Gender { get; set; } = string.Empty;
         // Therapist specific
         public string LicenseNumber { get; set; } = string.Empty;
         public string Specialization { get; set; } = string.Empty;

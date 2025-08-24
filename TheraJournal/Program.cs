@@ -38,6 +38,8 @@ builder.Services.AddTransient<IJwtService, JwtService>(); //what is transient?
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
 builder.Services.AddScoped<ITherapistRepository, TherapistRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 builder.Services.AddApiVersioning(config => {
     config.ApiVersionReader = new UrlSegmentApiVersionReader(); //api version as per the request URL
@@ -118,7 +120,8 @@ builder.Services.AddAuthentication(options =>
             ))
         };
     });
-builder.Services.AddAuthorization(options => { });
+builder.Services.AddAuthorization(options => { 
+});
 #endregion
 
 var app = builder.Build();

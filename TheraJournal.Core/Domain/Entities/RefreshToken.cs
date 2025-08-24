@@ -12,8 +12,6 @@ namespace TheraJournal.Core.Domain.Entities
     {
         public int Id { get; set; }
         public string Token { get; set; } = string.Empty;
-        public string JwtId { get; set; } = string.Empty;
-        public Guid UserId { get; set; }
         public ApplicationUser User { get; set; } //
 
         public DateTime CreateAt { get; set; }

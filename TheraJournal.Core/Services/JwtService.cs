@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TheraJournal.Core.Domain.IdentityEntities;
 using TheraJournal.Core.DTO;
@@ -34,7 +29,7 @@ namespace TheraJournal.Core.Services
         /// </summary>
         /// <param name="user">ApplicationUser object</param>
         /// <returns>AuthenticationResponse that includes token</returns>
-        public AuthenticationResponseDTO CreateJwtToken(ApplicationUser user)
+        public async Task<AuthenticationResponseDTO?>? CreateJwtToken(ApplicationUser user)
         {
             // Create a DateTime object representing the token expiration time by adding the number of minutes specified in the configuration to the current UTC time.
             DateTime expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:EXPIRATION_MINUTES"]));
@@ -55,7 +50,7 @@ namespace TheraJournal.Core.Services
             // Create a SymmetricSecurityKey object using the key specified in the configuration.
             //SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("Jwt__Key") 
+                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY") 
                            ?? throw new InvalidOperationException("JWT Key not configured"))
              );
 
@@ -75,38 +70,41 @@ namespace TheraJournal.Core.Services
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             string token = tokenHandler.WriteToken(tokenGenerator);
 
+            await CreateRefreshToken(token, user);
+
             // Create and return an AuthenticationResponse object containing the token, user email, user name, and token expiration time.
             return new AuthenticationResponseDTO()
             {
                 Token = token,
                 Email = user.Email,
-                //PersonName = user.PersonName,
                 Expiration = expiration,
             };
         }
         
         //Creates a refresh token (base 64 string of random numbers)
-        public async Task<string> CreateRefreshToken()
+        private async Task CreateRefreshToken(string token, ApplicationUser user)
         {
-            Byte[] bytes = new byte[64];
+            //Byte[] bytes = new byte[64];
                 
-            RandomNumberGenerator.Create();
-            var randomNumberGenerator = RandomNumberGenerator.Create();
-            randomNumberGenerator.GetBytes(bytes);
+            //RandomNumberGenerator.Create();
+            //var randomNumberGenerator = RandomNumberGenerator.Create();
+            //randomNumberGenerator.GetBytes(bytes);
             
             RefreshToken rt = new RefreshToken()
             {
-                Token = Convert.ToBase64String(bytes),
-                JwtId = Guid.NewGuid().ToString(),
+                Token = token,
+                //JwtId = Guid.NewGuid().ToString(),
+                User = user,
                 CreateAt = DateTime.UtcNow,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(60),
-                isUsed = false,
+                isUsed = true,
                 isRevoked = false
             };
 
             await _refreshTokenRepo.AddAsync(rt);
 
-            return Convert.ToBase64String(bytes);
+            return;
+            //return Convert.ToBase64String(bytes);
         }
 
         //public ClaimsPrincipal GetPrincipalFromJwtToken(string? token)

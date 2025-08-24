@@ -33,7 +33,7 @@ namespace TheraJournal.WebAPI.Controllers.v1
         /// </summary>
         /// <param name="registerDTO"></param>
         /// <returns></returns>
-        [HttpPost("register")]
+        [HttpPost("patient-register")]
         public async Task<ActionResult<ApplicationUser>> PostPatientRegister(RegisterPatientDTO registerDTO) 
         {
             if (ModelState.IsValid == false) 
@@ -46,10 +46,66 @@ namespace TheraJournal.WebAPI.Controllers.v1
 
             if (result == null) 
             {
-                return Problem("Registration Failed");
+                return Problem("Patient Registration Failed");
             }
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="registerDTO"></param>
+        /// <returns></returns>
+        [HttpPost("therapist-register")]
+        public async Task<ActionResult<ApplicationUser>> PostTherapistRegister(RegisterTherapistDTO registerDTO) 
+        {
+            if (ModelState.IsValid == false)
+            {
+                string errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessage);
+            }
+
+            AuthenticationResponseDTO result = await _authService.RegisterTherapistAsync(registerDTO);
+
+            if (result == null)
+            {
+                return Problem("Therapist Registration Failed");
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="loginDTO"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public async Task<IActionResult> PostLogin(LoginDTO loginDTO) 
+        {
+            // TODO How to implement checking user role unless keeping separate login endpoints for each role?
+             if (ModelState.IsValid == false)
+             {
+                string errorMessage = string.Join(" | ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return Problem(errorMessage);
+             }
+
+             // TODO create a service for checking user role
+             
+             
+
+             return Ok("Lol");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("logout")]
+        public async Task<IActionResult> GetLogout()
+        {
+            return NoContent();
         }
     }
 }
