@@ -53,7 +53,11 @@ namespace TheraJournal.Core.Services
             };
 
             // Create a SymmetricSecurityKey object using the key specified in the configuration.
-            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            //SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("Jwt__Key") 
+                           ?? throw new InvalidOperationException("JWT Key not configured"))
+             );
 
             // Create a SigningCredentials object with the security key and the HMACSHA256 algorithm.
             SigningCredentials signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -105,9 +109,9 @@ namespace TheraJournal.Core.Services
             return Convert.ToBase64String(bytes);
         }
 
-        public ClaimsPrincipal GetPrincipalFromJwtToken(string? token)
-        {
-            throw new NotImplementedException();
-        }
+        //public ClaimsPrincipal GetPrincipalFromJwtToken(string? token)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

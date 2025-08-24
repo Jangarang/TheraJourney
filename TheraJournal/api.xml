@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TheraJourney.WebAPI</name>
+    </assembly>
+	<members>
+		<member name="T:TheraJourney.WebAPI.Controllers.v1.AccountController">
+			<summary>
+
+			</summary>
+		</member>
+		<member name="T:TheraJourney.WebAPI.Controllers.v1.AccountController.PostPatientRegister">
+			<summary>
+				To register account
+			</summary>
+			<param name="registerDTO"></param>
+			<returns></returns>
+		</member>
+	</members>
+</doc>

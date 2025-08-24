@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TheraJournal.Core.Domain.IdentityEntities;
 using TheraJournal.Core.DTO;
@@ -9,16 +11,28 @@ namespace TheraJournal.WebAPI.Controllers.v1
     /// <summary>
     /// 
     /// </summary>
+    [ApiController]
+    [AllowAnonymous]
+    [ApiExplorerSettings(GroupName = "v1")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IAuthService _authService;
         private readonly IJwtService _jwtService;
 
-        public AccountController(IJwtService jwtService) 
+        public AccountController(IAuthService authService,
+            IJwtService jwtService) 
         {
+            _authService = authService;
             _jwtService = jwtService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="registerDTO"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<ActionResult<ApplicationUser>> PostPatientRegister(RegisterPatientDTO registerDTO) 
         {
